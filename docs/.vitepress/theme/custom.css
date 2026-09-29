@@ -282,6 +282,21 @@ kbd {
     padding-left: 30px;
     margin-left: 12px;
   }
+  /* 手机上代码块默认左右负边距铺满屏幕，放在步骤里会溢出，这里改回正常边距 */
+  .vp-doc .cz-steps div[class*='language-'],
+  .vp-doc .cz-steps .vp-code-group .tabs {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .vp-doc .cz-steps div[class*='language-'] {
+    border-radius: 8px;
+  }
+  .vp-doc .cz-steps .vp-code-group .tabs {
+    border-radius: 8px 8px 0 0;
+  }
+  .vp-doc .cz-steps .vp-code-group div[class*='language-'] {
+    border-radius: 0 0 8px 8px;
+  }
   .vp-doc .cz-steps > h3::before,
   .vp-doc .cz-steps > h4::before {
     left: -46px;

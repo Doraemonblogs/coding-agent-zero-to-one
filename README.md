@@ -8,6 +8,7 @@
 - **国内网络友好**：主线走「npm 国内镜像 + DeepSeek」，全程不需要代理。
 - **两个工具都讲**：Claude Code 和 Codex CLI 并列讲解，配置文件给出可直接复制的模板。
 - **标注验证状态**：每页标注最后验证的日期和工具版本，没能实测的步骤会明确标出「待实测」。
+- **完整实战**：从规划、分阶段实现到调试收尾，带你用 Agent 做完一个真正能用的小应用。
 
 ## 目录
 
@@ -19,9 +20,9 @@
 | [第 3 章 · Claude Code](docs/03-claude-code/index.md) | 安装、第一次上手 | ✅ |
 | [第 4 章 · Codex CLI](docs/04-codex/index.md) | 安装、第一次上手 | ✅ |
 | [第 5 章 · 接入 DeepSeek](docs/05-deepseek/index.md) | 申请 API Key，配置 Claude Code / Codex | ✅ |
-| 第 6 章 · Skill | 安装和编写 Skill | 🚧 编写中 |
-| 第 7 章 · 实战项目 | 从零完成一个小项目 | 🚧 编写中 |
-| 第 8 章 · 方法与技巧 | 提需求、规划、Git、上下文、成本、安全 | 🚧 编写中 |
+| [第 6 章 · Skill](docs/06-skills/index.md) | Skill 是什么、安装现成的 Skill、编写自己的 Skill | ✅ |
+| [第 7 章 · 实战项目](docs/07-practice/index.md) | 用 Agent 从零做一个「小账本」记账网页 | ✅ |
+| [第 8 章 · 方法与技巧](docs/08-tips/index.md) | 提需求、工作流程、上下文与费用、安全 | ✅ |
 | [附录 · 配置模板](configs/) | 可直接复制的配置文件 | ✅ |
 | [附录 · 常见问题](docs/faq/index.md) | 安装、接入、使用中的常见报错 | ✅ |
 
@@ -35,7 +36,9 @@
 │   ├── .vitepress/  # 站点配置
 │   ├── 00-intro/ … 08-tips/
 │   └── faq/
-├── configs/         # 配置模板
+├── configs/         # 配置模板（Claude Code / Codex 接入 DeepSeek）
+├── skills/          # 示例 Skill（两款工具通用）
+├── examples/        # 实战项目的参考成品
 └── package.json
 ```
 

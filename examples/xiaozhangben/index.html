@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小账本</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <!-- 顶部：标题和月份切换 -->
+    <header class="top">
+      <h1>小账本</h1>
+      <div class="month-switch">
+        <button id="prev-month" class="icon-btn" aria-label="上个月">‹</button>
+        <span id="month-label">2026 年 9 月</span>
+        <button id="next-month" class="icon-btn" aria-label="下个月">›</button>
+      </div>
+    </header>
+
+    <!-- 本月汇总 -->
+    <section class="summary">
+      <div class="summary-item">
+        <span class="label">收入</span>
+        <strong id="sum-income" class="income">¥0.00</strong>
+      </div>
+      <div class="summary-item">
+        <span class="label">支出</span>
+        <strong id="sum-expense" class="expense">¥0.00</strong>
+      </div>
+      <div class="summary-item">
+        <span class="label">结余</span>
+        <strong id="sum-balance">¥0.00</strong>
+      </div>
+    </section>
+
+    <!-- 记一笔 -->
+    <section class="card">
+      <h2>记一笔</h2>
+      <form id="record-form" novalidate>
+        <div class="type-toggle" role="radiogroup" aria-label="收支类型">
+          <label><input type="radio" name="type" value="expense" checked><span>支出</span></label>
+          <label><input type="radio" name="type" value="income"><span>收入</span></label>
+        </div>
+        <div class="row">
+          <label class="field">
+            <span>金额</span>
+            <input id="amount" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off">
+          </label>
+          <label class="field">
+            <span>分类</span>
+            <select id="category"></select>
+          </label>
+        </div>
+        <div class="row">
+          <label class="field">
+            <span>日期</span>
+            <input id="date" type="date">
+          </label>
+          <label class="field">
+            <span>备注</span>
+            <input id="note" type="text" maxlength="30" placeholder="可不填">
+          </label>
+        </div>
+        <p id="form-error" class="error" role="alert"></p>
+        <button type="submit" class="primary-btn">添加</button>
+      </form>
+    </section>
+
+    <!-- 支出分类占比 -->
+    <section class="card">
+      <h2>支出分类</h2>
+      <div id="category-bars"></div>
+    </section>
+
+    <!-- 明细列表 -->
+    <section class="card">
+      <h2>明细</h2>
+      <div id="record-list"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
