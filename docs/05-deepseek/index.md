@@ -1,4 +1,5 @@
 ---
+banner: /images/banners/ch5.webp
 verified: 2026-09-29
 versions: [deepseek-v4-pro, deepseek-v4-flash]
 time: 10 分钟

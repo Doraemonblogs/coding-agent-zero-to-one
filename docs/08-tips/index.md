@@ -1,4 +1,5 @@
 ---
+banner: /images/banners/ch8.webp
 verified: 2026-09-29
 time: 10 分钟
 ---

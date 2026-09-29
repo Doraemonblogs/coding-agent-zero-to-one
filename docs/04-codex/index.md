@@ -1,4 +1,5 @@
 ---
+banner: /images/banners/ch4.webp
 verified: 2026-09-29
 versions: [Codex CLI 0.158.0, npm 10 / 11 / 12]
 time: 10 分钟

@@ -1,4 +1,5 @@
 ---
+banner: /images/banners/ch7.webp
 verified: 2026-09-29
 versions: [Claude Code 2.1.284, Codex CLI 0.158.0]
 time: 15 分钟

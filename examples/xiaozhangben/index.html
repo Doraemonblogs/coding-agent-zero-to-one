@@ -1,84 +1,99 @@
 <!DOCTYPE html>
+<!-- 小账本：个人记账网页 -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
+  <!-- 让手机浏览器按设备宽度显示页面 -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>小账本</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="app">
-    <!-- 顶部：标题和月份切换 -->
-    <header class="top">
+  <div class="container">
+
+    <!-- 标题 -->
+    <header class="app-title">
       <h1>小账本</h1>
-      <div class="month-switch">
-        <button id="prev-month" class="icon-btn" aria-label="上个月">‹</button>
-        <span id="month-label">2026 年 9 月</span>
-        <button id="next-month" class="icon-btn" aria-label="下个月">›</button>
-      </div>
     </header>
 
-    <!-- 本月汇总 -->
-    <section class="summary">
-      <div class="summary-item">
-        <span class="label">收入</span>
-        <strong id="sum-income" class="income">¥0.00</strong>
+    <!-- 月份切换器：阶段 3 才会真正切换，现在先展示样子 -->
+    <section class="month-nav">
+      <button type="button" class="month-btn" id="prev-month-btn">‹ 上月</button>
+      <span class="month-label" id="month-label">2026年9月</span>
+      <button type="button" class="month-btn" id="next-month-btn">下月 ›</button>
+    </section>
+
+    <!-- 本月汇总：三个数字卡片，阶段 2 起显示真实数据 -->
+    <section class="summary" id="summary">
+      <div class="summary-card">
+        <div class="summary-label">总收入</div>
+        <div class="summary-value income" id="summary-income">¥0.00</div>
       </div>
-      <div class="summary-item">
-        <span class="label">支出</span>
-        <strong id="sum-expense" class="expense">¥0.00</strong>
+      <div class="summary-card">
+        <div class="summary-label">总支出</div>
+        <div class="summary-value expense" id="summary-expense">¥0.00</div>
       </div>
-      <div class="summary-item">
-        <span class="label">结余</span>
-        <strong id="sum-balance">¥0.00</strong>
+      <div class="summary-card">
+        <div class="summary-label">结余</div>
+        <div class="summary-value" id="summary-balance">¥0.00</div>
       </div>
     </section>
 
-    <!-- 记一笔 -->
-    <section class="card">
+    <!-- 记一笔表单 -->
+    <section class="panel">
       <h2>记一笔</h2>
-      <form id="record-form" novalidate>
-        <div class="type-toggle" role="radiogroup" aria-label="收支类型">
-          <label><input type="radio" name="type" value="expense" checked><span>支出</span></label>
-          <label><input type="radio" name="type" value="income"><span>收入</span></label>
+      <form id="entry-form">
+        <!-- 收入/支出类型切换：选中的按钮由 app.js 加上 selected 样式 -->
+        <div class="type-switch">
+          <button type="button" class="type-btn selected" id="type-expense">支出</button>
+          <button type="button" class="type-btn" id="type-income">收入</button>
         </div>
-        <div class="row">
-          <label class="field">
-            <span>金额</span>
-            <input id="amount" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off">
-          </label>
-          <label class="field">
-            <span>分类</span>
-            <select id="category"></select>
-          </label>
+
+        <div class="form-row">
+          <label for="amount-input">金额（元）</label>
+          <!-- 故意用 text 而不是 number：number 输入框允许输入 e、- 等字符，用 text 加校验更可控 -->
+          <input type="text" id="amount-input" inputmode="decimal" maxlength="10" placeholder="例如 12.34">
         </div>
-        <div class="row">
-          <label class="field">
-            <span>日期</span>
-            <input id="date" type="date">
-          </label>
-          <label class="field">
-            <span>备注</span>
-            <input id="note" type="text" maxlength="30" placeholder="可不填">
-          </label>
+
+        <div class="form-row">
+          <label for="category-select">分类</label>
+          <!-- 选项由 app.js 按收支类型动态生成 -->
+          <select id="category-select"></select>
         </div>
-        <p id="form-error" class="error" role="alert"></p>
-        <button type="submit" class="primary-btn">添加</button>
+
+        <div class="form-row">
+          <label for="date-input">日期</label>
+          <!-- 阶段 2 由 app.js 自动填上今天的日期 -->
+          <input type="date" id="date-input">
+        </div>
+
+        <div class="form-row">
+          <label for="note-input">备注（可不填）</label>
+          <input type="text" id="note-input" maxlength="30" placeholder="例如 午饭">
+        </div>
+
+        <!-- 金额校验失败时，错误文字显示在这里（默认隐藏） -->
+        <p class="form-error" id="form-error" hidden></p>
+
+        <button type="submit" class="submit-btn">记一笔</button>
       </form>
     </section>
 
-    <!-- 支出分类占比 -->
-    <section class="card">
-      <h2>支出分类</h2>
-      <div id="category-bars"></div>
+    <!-- 支出分类占比：横条图。阶段 3 换成真实数据，现在先显示空状态占位 -->
+    <section class="panel">
+      <h2>本月支出分类</h2>
+      <div class="chart-list" id="category-chart">
+        <p class="empty-hint">本月暂无支出</p>
+      </div>
     </section>
 
-    <!-- 明细列表 -->
-    <section class="card">
+    <!-- 明细列表：按日期分组。内容由 app.js 渲染 -->
+    <section class="panel">
       <h2>明细</h2>
-      <div id="record-list"></div>
+      <div class="record-list" id="record-list"></div>
     </section>
-  </main>
+
+  </div>
 
   <script src="app.js"></script>
 </body>

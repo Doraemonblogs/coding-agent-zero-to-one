@@ -1,4 +1,5 @@
 ---
+banner: /images/banners/ch3.webp
 verified: 2026-09-29
 versions: [Claude Code 2.1.284, npm 10 / 11 / 12]
 time: 10 分钟

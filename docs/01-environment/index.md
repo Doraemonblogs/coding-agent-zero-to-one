@@ -1,4 +1,5 @@
 ---
+banner: /images/banners/ch1.webp
 verified: 2026-09-29
 versions: [Node.js 24 LTS, Git 2.x]
 time: 40 分钟
