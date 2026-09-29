@@ -1,0 +1,13 @@
+# Codex 接入 DeepSeek 的配置模板
+# 放到 ~/.codex/config.toml（Windows: C:\Users\你的用户名\.codex\config.toml）
+# API Key 不写在这里，而是从环境变量 DEEPSEEK_API_KEY 读取
+
+model = "deepseek-v4-pro"
+model_provider = "deepseek"
+model_reasoning_effort = "high"
+
+[model_providers.deepseek]
+name = "DeepSeek"
+base_url = "https://api.deepseek.com"
+env_key = "DEEPSEEK_API_KEY"
+wire_api = "responses"

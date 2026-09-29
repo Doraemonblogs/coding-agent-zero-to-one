@@ -1,0 +1,15 @@
+{
+  "name": "coding-agent-zero-to-one",
+  "version": "0.1.0",
+  "private": true,
+  "description": "面向零基础用户的 Coding Agent（Claude Code / Codex）中文入门教程",
+  "type": "module",
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}
