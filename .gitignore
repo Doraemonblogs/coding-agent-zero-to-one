@@ -3,3 +3,8 @@ docs/.vitepress/dist/
 docs/.vitepress/cache/
 .DS_Store
 *.log
+
+# 本地密钥，不要提交
+.env
+.env.*
+!.env.example

@@ -55,6 +55,34 @@ npm config set registry https://registry.npmmirror.com
 
 **解决**：**不要**用 `sudo`。按 [避免权限错误](../01-environment/nodejs#macos-linux-专属-避免权限错误) 把 npm 全局目录改到用户目录。
 
+### npm 提示 allow-scripts / install-scripts 警告
+
+**现象**：`npm install` 结束时出现：
+
+```
+npm warn allow-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn allow-scripts   esbuild@0.21.5 (postinstall: node install.js)
+```
+
+**原因**：这是 npm 12 新增的安全机制，默认**拦截**依赖包自带的安装脚本，防止恶意包在安装时执行代码。
+
+**解决**：通常**不需要处理**。以本教程的站点为例，被拦截的 esbuild 脚本只是做一次校验，拦截后站点照样能正常运行（作者已用 npm 12.1.0 实测）。如果确实需要放行某个包，按提示执行 `npm install-scripts approve <包名>`。
+
+### 浏览器打开 localhost 显示"拒绝连接"
+
+**现象**：终端里的程序已经正常启动，并显示了 `http://localhost:端口/` 这样的地址，但浏览器打开后显示"无法访问此网站""localhost 拒绝了我们的连接请求"（`ERR_CONNECTION_REFUSED`）。
+
+**原因**：`localhost` 可以对应两个地址：IPv4 的 `127.0.0.1` 和 IPv6 的 `::1`。有些开发服务器只监听其中一个（在 Windows 上经常只监听 `::1`），而浏览器访问的是另一个，于是连不上。电脑上装了代理软件时更容易出现。
+
+**解决**：
+1. 先确认启动程序的那个终端窗口**还开着**，没有被关掉或按过 `Ctrl + C`；
+2. 让程序明确监听 `127.0.0.1`。以 Vite 类的项目为例，启动时加上参数：`npm run dev -- --host 127.0.0.1`，然后用浏览器打开 `http://127.0.0.1:端口/`；
+3. 用 `netstat -ano | findstr 端口号`（Windows）或 `lsof -i :端口号`（macOS）查看程序实际监听的地址，用那个地址访问。
+
+::: tip 可以让 Agent 帮你处理
+遇到这类问题，把终端输出和浏览器报错一起告诉 Claude Code 或 Codex，它通常能判断出原因并修改项目配置。
+:::
+
 ### Node.js 版本太旧
 
 **现象**：安装 Claude Code 时出现 `EBADENGINE` 警告，或 `node -v` 显示低于 `v22`。

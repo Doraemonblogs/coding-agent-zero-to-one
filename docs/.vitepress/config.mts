@@ -15,6 +15,14 @@ export default defineConfig({
     lineNumbers: false,
   },
 
+  vite: {
+    server: {
+      // 默认监听 localhost 时，Windows 上可能只绑定到 IPv6 的 ::1，
+      // 浏览器走 127.0.0.1 就会“拒绝连接”，所以明确监听 IPv4 回环地址
+      host: '127.0.0.1',
+    },
+  },
+
   themeConfig: {
     nav: [
       { text: '开始学习', link: '/00-intro/' },

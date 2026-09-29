@@ -48,7 +48,7 @@ npm install
 npm run docs:dev
 ```
 
-然后在浏览器中打开终端里显示的地址。
+然后在浏览器中打开终端里显示的地址（默认是 http://127.0.0.1:5173/coding-agent-zero-to-one/ ）。
 
 构建静态站点：
 
