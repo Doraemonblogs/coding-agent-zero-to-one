@@ -1,16 +1,24 @@
+---
+verified: 2026-09-29
+versions: [Codex CLI 0.158.0]
+time: 15 分钟
+tested: partial
+---
+
 # Codex 接入 DeepSeek
 
-::: info 版本信息
-最后验证：2026-09-29 · Codex CLI 0.158.0
+<PageMeta />
+
+::: info 验证情况
 - ✅ 已实测：配置文件能被 Codex 正确加载（`codex doctor` 显示配置解析成功、读取到 API Key 环境变量、请求地址正确）
-- ⚠️ 待实测：真实调用 DeepSeek 完成任务（作者的测试环境无法访问 DeepSeek）
+- ⚠️ 待实测：真实调用 DeepSeek 完成任务（作者的测试环境暂时无法访问 DeepSeek）
 :::
 
 ## 原理
 
 Codex 使用 OpenAI 的 **Responses API** 格式和模型通信。DeepSeek 现在原生支持这个格式，接口地址是：
 
-```
+```text
 https://api.deepseek.com
 ```
 
@@ -20,9 +28,13 @@ https://api.deepseek.com
 Codex 早期版本支持 `wire_api = "chat"` 的写法，很多旧教程都用它接入 DeepSeek。**新版 Codex 已经移除了这个选项**，照抄会报错 `wire_api = "chat" is no longer supported`。本页的写法是 `wire_api = "responses"`。
 :::
 
-## 第 1 步：把 API Key 设为环境变量
+## 配置步骤
 
-Codex 推荐从**环境变量**读取 API Key，而不是直接写在配置文件里。我们把 Key 保存到一个名为 `DEEPSEEK_API_KEY` 的永久环境变量中（不熟悉环境变量的话，回顾 [认识终端 · 环境变量](../01-environment/terminal#环境变量是什么)）。
+::::: steps
+
+### 把 API Key 设为环境变量
+
+Codex 推荐从**环境变量**读取 API Key，而不是直接写在配置文件里（这样配置文件可以放心地分享给别人）。我们把 Key 保存到一个名为 `DEEPSEEK_API_KEY` 的永久环境变量中（不熟悉环境变量的话，回顾 [认识终端 · 环境变量](../01-environment/terminal#环境变量是什么)）。
 
 把 `<你的 DeepSeek API Key>` 替换成你的 Key（尖括号删掉，引号保留）：
 
@@ -40,7 +52,13 @@ echo 'export DEEPSEEK_API_KEY="<你的 DeepSeek API Key>"' >> ~/.bashrc
 ```
 :::
 
-然后**关掉终端，重新打开一个**，检查是否设置成功：
+::: tip Windows 也可以用图形界面设置
+开始菜单搜索「编辑账户的环境变量」→ 在「用户变量」中点击「新建」→ 变量名填 `DEEPSEEK_API_KEY`，变量值填你的 Key → 确定。
+:::
+
+### 确认环境变量设置成功
+
+**关掉终端，重新打开一个**，检查：
 
 ::: code-group
 ```powershell [Windows PowerShell]
@@ -52,13 +70,9 @@ echo $DEEPSEEK_API_KEY
 ```
 :::
 
-能输出你的 Key 就对了。
+能输出你的 Key 就对了。如果输出为空，说明没设置成功，或者还没重新打开终端。
 
-::: tip Windows 也可以用图形界面设置
-开始菜单搜索「编辑账户的环境变量」→ 在「用户变量」中点击「新建」→ 变量名填 `DEEPSEEK_API_KEY`，变量值填你的 Key。
-:::
-
-## 第 2 步：编辑 config.toml
+### 打开 config.toml
 
 Codex 的配置文件位于：
 
@@ -81,6 +95,8 @@ code ~/.codex/config.toml
 ```
 :::
 
+### 填入配置
+
 把下面的内容复制进去并保存。**这份配置里没有 Key**，不需要做任何替换：
 
 ```toml
@@ -96,10 +112,56 @@ wire_api = "responses"
 ```
 
 ::: warning 如果 config.toml 里原来就有内容
-把前三行（`model`、`model_provider`、`model_reasoning_effort`）放在文件**最开头**，替换掉原来的同名项；`[model_providers.deepseek]` 这一段放在文件**末尾**。TOML 格式中，`[xxx]` 这样的标题下面的内容都属于这个标题，所以顶层的配置项必须写在所有 `[xxx]` 标题之前。
+把前三行（`model`、`model_provider`、`model_reasoning_effort`）放在文件**最开头**，替换掉原来的同名项；`[model_providers.deepseek]` 这一段放在文件**末尾**。
+
+TOML 格式中，`[xxx]` 这样的标题下面的内容都属于这个标题，所以**顶层的配置项必须写在所有 `[xxx]` 标题之前**，否则会被当成上一个标题的一部分。
 :::
 
-### 每一行是什么意思
+### 用诊断命令检查
+
+```bash
+codex doctor
+```
+
+重点看这几行：
+
+::: terminal 你会看到（节选）
+```text
+Configuration
+  ✓ config       loaded
+      model                    deepseek-v4-pro · deepseek
+      config.toml parse        ok
+  ✓ auth         auth is provided by the active model provider
+      provider auth env var    DEEPSEEK_API_KEY (present)
+...
+Connectivity
+  ✓ reachability ...
+```
+:::
+
+| 看到的内容 | 说明 |
+|---|---|
+| `config.toml parse ok` | 配置文件格式正确 |
+| `DEEPSEEK_API_KEY (present)` | 成功读到了 API Key 环境变量 |
+| `✗ auth  active model provider auth env var is missing` 和 `DEEPSEEK_API_KEY (missing)` | 没读到 Key，回到第 1 步检查，并确认已经重新打开终端 |
+| `reachability` 一行是 `✓` | 能连上 DeepSeek |
+
+### 真实调用一次
+
+进入练习项目，用非交互模式问一句话：
+
+```bash
+cd ~/ai-playground
+codex exec "用一句话介绍你自己"
+```
+
+能输出一段回答，就说明接入成功了。再到 DeepSeek 开放平台的「用量信息」页面确认有调用记录。
+
+:::::
+
+**接入完成！** 接下来去看 [Codex 第一次上手](../04-codex/basics)。
+
+## 每一行配置是什么意思
 
 | 配置项 | 含义 |
 |---|---|
@@ -111,46 +173,6 @@ wire_api = "responses"
 | `base_url` | 请求发送的地址 |
 | `env_key` | 从哪个**环境变量**读取 API Key，对应第 1 步设置的 `DEEPSEEK_API_KEY` |
 | `wire_api` | 通信格式，必须是 `responses` |
-
-## 第 3 步：验证
-
-**关掉终端，重新打开一个**，先运行诊断命令：
-
-```bash
-codex doctor
-```
-
-重点看这几行：
-
-```
-Configuration
-  ✓ config       loaded
-      model                    deepseek-v4-pro · deepseek
-      config.toml parse        ok
-  ✓ auth         auth is provided by the active model provider
-      provider auth env var    DEEPSEEK_API_KEY (present)
-...
-Connectivity
-  ✓ reachability ...
-```
-
-| 看到的内容 | 说明 |
-|---|---|
-| `config.toml parse ok` | 配置文件格式正确 |
-| `DEEPSEEK_API_KEY (present)` | 成功读到了 API Key 环境变量 |
-| `✗ auth  active model provider auth env var is missing` 和 `DEEPSEEK_API_KEY (missing)` | 没读到 Key，回到第 1 步检查，并确认已经重新打开终端 |
-| `reachability` 一行是 `✓` | 能连上 DeepSeek |
-
-然后做一次真实调用，进入练习项目，用非交互模式问一句话：
-
-```bash
-cd ~/ai-playground
-codex exec "用一句话介绍你自己"
-```
-
-能输出一段回答，就说明接入成功了。再到 DeepSeek 开放平台的「用量信息」页面确认有调用记录。
-
-**接入完成！** 接下来去看 [Codex 第一次上手](../04-codex/basics)。
 
 ## 进阶：使用 DeepSeek 官方的一键配置
 
@@ -177,7 +199,7 @@ DeepSeek 官方文档提供了 Codex 的一键配置脚本。除了写入上面�
 
 **报错 401 / 认证失败**
 - 运行 `codex doctor` 看 `provider auth env var` 一行，确认读到了 Key；
-- 确认 Key 本身正确（可以用 [第 5 章开头的方法](./#第-3-步-验证-key-可用) 验证）。
+- 确认 Key 本身正确（可以用 [第 5 章开头的方法](./#验证-key-可用) 验证）。
 
 **报错 402 / 余额不足**
 - 去 DeepSeek 开放平台充值。
@@ -190,3 +212,5 @@ DeepSeek 官方文档提供了 Codex 的一键配置脚本。除了写入上面�
 ## 想换回 ChatGPT 账号？
 
 把 `config.toml` 开头的 `model_provider = "deepseek"` 删掉（或在行首加 `#` 注释掉），`model` 改回 OpenAI 的模型名或删掉，重新启动 Codex 按提示登录即可。
+
+如果需要在多个模型服务之间频繁切换，可以了解开源工具 [CC Switch](https://github.com/farion1231/cc-switch)。

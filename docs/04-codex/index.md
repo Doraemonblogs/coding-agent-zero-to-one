@@ -1,7 +1,17 @@
+---
+verified: 2026-09-29
+versions: [Codex CLI 0.158.0, npm 10 / 11 / 12]
+time: 10 分钟
+tested: partial
+---
+
 # 安装 Codex CLI
 
-::: info 版本信息
-最后验证：2026-09-29 · Codex CLI 0.158.0 · 已在 Linux 上实测 npm 安装
+<PageMeta />
+
+::: info 验证情况
+- ✅ 已实测：npm 11、12 下用本页命令安装，`codex --version` 正常（Linux）
+- ⚠️ 待实测：Windows、macOS 真机安装
 :::
 
 ## 开始之前
@@ -13,15 +23,23 @@
 
 ## 安装
 
-在终端中执行：
+::::: steps
+
+### 执行安装命令
 
 ```bash
 npm install -g @openai/codex
 ```
 
-和 Claude Code 一样，npm 会根据你的系统自动下载对应的原生程序。
+和 Claude Code 一样，npm 会根据你的系统自动下载对应的原生程序。Codex 不需要运行安装脚本，所以**不需要**加 `--allow-scripts` 参数。
 
-## 验证
+::: terminal 你会看到
+```text
+added 2 packages in 12s
+```
+:::
+
+### 验证安装
 
 **新开一个终端窗口**，输入：
 
@@ -29,22 +47,28 @@ npm install -g @openai/codex
 codex --version
 ```
 
-看到类似 `codex-cli 0.158.0` 的输出就说明安装成功。
+::: terminal 你会看到
+```text
+codex-cli 0.158.0
+```
+:::
 
-Codex 也自带诊断命令，可以检查安装、配置和网络连通性：
+### 运行诊断（可选）
+
+Codex 自带诊断命令，可以检查安装、配置、登录状态和网络连通性：
 
 ```bash
 codex doctor
 ```
 
+现在还没配置模型，诊断结果里有几项显示 `✗` 是正常的。接入 DeepSeek 之后，会再用它来检查配置是否正确。
+
+:::::
+
 ::: warning 如果提示找不到 codex 命令
 - **先关掉所有终端窗口再重新打开**；
 - Windows 报"禁止运行脚本"：回到 [允许 PowerShell 运行脚本](../01-environment/nodejs#windows-专属-允许-powershell-运行脚本)；
 - 其他情况见 [常见问题](../faq/#命令找不到)。
-:::
-
-::: warning 待实测
-Codex 在 Windows 原生环境（非 WSL）下的安装和运行，作者没有在真实机器上验证。
 :::
 
 ## 下一步：接入模型（重要）
@@ -58,7 +82,7 @@ Codex 在 Windows 原生环境（非 WSL）下的安装和运行，作者没有�
 | OpenAI API Key | 有 OpenAI API 账号 | 运行 `codex login --with-api-key`，按提示输入 Key |
 
 ::: warning 用 DeepSeek 的话，先别急着运行 codex
-不做任何配置就运行 `codex`，它会要求你登录 OpenAI 账号。打算用 DeepSeek 的读者，请**先完成第 5 章的配置**再启动。如果已经看到了登录界面，按 `Ctrl + C` 退出即可。
+不做任何配置就运行 `codex`，它会要求你登录 OpenAI 账号。打算用 DeepSeek 的读者，请**先完成第 5 章的配置**再启动。如果已经看到了登录界面，按 <kbd>Ctrl</kbd> + <kbd>C</kbd> 退出即可。
 :::
 
 模型接入完成后，回来看 [第一次上手](./basics)。
@@ -97,4 +121,15 @@ npm uninstall -g @openai/codex
 ```
 :::
 
-Codex 的配置保存在用户主目录下的 `.codex` 文件夹里（Windows 是 `C:\Users\你的用户名\.codex`），卸载程序不会删除它。
+Codex 更新很频繁（几乎每天都有新版本），界面和命令可能和本教程略有不同，以实际为准。
+
+### 配置文件在哪里
+
+| 位置 | 内容 |
+|---|---|
+| `~/.codex/config.toml` | 用户配置：模型、模型提供方、权限等 |
+| `~/.codex/` 文件夹 | 登录信息、历史对话、日志等 |
+| `~/.agents/skills/` | 你安装的 Skill（第 6 章介绍） |
+| 项目里的 `AGENTS.md` | 给 Codex 的项目说明（第一次上手里会讲） |
+
+Windows 上 `~` 对应 `C:\Users\你的用户名`。卸载程序不会删除这些文件。

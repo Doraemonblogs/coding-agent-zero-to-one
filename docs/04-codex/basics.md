@@ -1,11 +1,16 @@
+---
+verified: 2026-09-29
+versions: [Codex CLI 0.158.0]
+time: 25 分钟
+tested: none
+---
+
 # Codex 第一次上手
 
-::: info 版本信息
-最后验证：2026-09-29 · Codex CLI 0.158.0 · 界面文字参考源码整理，交互流程**待实测**
-:::
+<PageMeta />
 
-::: warning 待实测
-作者的测试环境里没有能完整运行 Codex 交互界面的终端，本页的界面描述是根据 Codex 0.158.0 的源码和命令帮助整理的。实际界面可能略有出入，以你看到的为准。
+::: warning 验证情况
+作者的测试环境里无法完整运行 Codex 的交互界面，本页的界面文字是根据 Codex 0.158.0 的**源码和命令帮助**整理的（信任文件夹的提示、权限模式名称、斜杠命令都来自源码）。实际界面的排版可能略有出入，以你看到的为准。
 :::
 
 ## 开始之前
@@ -14,7 +19,11 @@
 - 用 DeepSeek：完成 [Codex 接入 DeepSeek](../05-deepseek/codex)；
 - 用 ChatGPT 账号：运行过 `codex` 并完成了登录。
 
-## 第 1 步：准备练习项目
+## 完成第一个任务
+
+::::: steps
+
+### 准备练习项目
 
 还是用 `ai-playground` 文件夹，先存一次档：
 
@@ -24,7 +33,7 @@ git add -A
 git commit -m "开始练习 Codex"
 ```
 
-## 第 2 步：启动 Codex
+### 启动 Codex
 
 ```bash
 codex
@@ -34,20 +43,26 @@ codex
 
 第一次在某个文件夹里启动时，Codex 会询问是否信任它：
 
-```
-Folder access
-~/ai-playground
+::: terminal 你会看到
+```text
+  Folder access
+  ~/ai-playground
 
-Trust this folder? Codex can read, edit, and run files here,
-subject to your permission settings. ...
+  Trust this folder? Codex can read, edit, and run files here,
+  subject to your permission settings. Folder settings can run code
+  automatically, even without a model request. Continue only if you
+  trust these files. Your trust decision will be saved.
 
 › 1. Trust and continue
   2. Quit
+
+  enter continue and create sandbox · esc quit
 ```
+:::
 
-确认是自己的项目后，选择 `1. Trust and continue` 并回车。你的选择会被保存，以后在这个文件夹启动就不再询问。
+确认是自己的项目后，选择 `1. Trust and continue` 并按 <kbd>Enter</kbd>。你的选择会被保存，以后在这个文件夹启动就不再询问。
 
-## 第 3 步：完成第一个任务
+### 提出第一个需求
 
 在输入框里输入：
 
@@ -60,17 +75,17 @@ subject to your permission settings. ...
 可以换一个需求，比如"创建一个 todo.html，做一个简单的待办清单，可以添加和删除事项"。
 :::
 
-### Codex 和 Claude Code 的一个重要区别：沙箱
+### 观察它的工作方式
 
-你可能会发现，Codex **没有问你就直接创建了文件**。这是因为 Codex 使用**沙箱**（sandbox）机制来控制风险：
+你可能会发现，Codex **没有问你就直接创建了文件**。这是因为 Codex 用**沙箱**（sandbox）机制来控制风险，而不是每一步都问你：
 
 - 在你信任的文件夹里，Codex 默认可以**直接读写这个文件夹内的文件**；
 - 但它**不能修改文件夹以外的文件**，默认**也不能联网**；
 - 需要越过这些限制时（比如安装依赖要联网），它才会停下来问你。
 
-而 Claude Code 默认是"每次修改都问你"。两种思路各有好处，关键是：**有 Git 存档，改坏了随时可以恢复**。
+Claude Code 默认是"每次修改都问你"，Codex 是"划定范围，范围内自由发挥"。两种思路各有好处，共同的前提是：**有 Git 存档，改坏了随时可以恢复**。
 
-## 第 4 步：检查改动并存档
+### 检查改动
 
 Codex 有一个专门看改动的命令，在输入框里输入：
 
@@ -78,11 +93,13 @@ Codex 有一个专门看改动的命令，在输入框里输入：
 /diff
 ```
 
-也可以用 `!` 开头直接执行终端命令：
+它会显示所有改动，**包括新建的文件**。也可以用 `!` 开头直接执行终端命令：
 
 ```text
 !git diff
 ```
+
+### 存档
 
 满意的话存档：
 
@@ -90,11 +107,13 @@ Codex 有一个专门看改动的命令，在输入框里输入：
 !git add -A && git commit -m "Codex 完成的第一个任务"
 ```
 
-## 第 5 步：退出和恢复
+### 退出，以及下次继续
 
-- 退出：输入 `/exit`，或者按 `Ctrl + C`；
+- 退出：输入 `/exit`，或者按 <kbd>Ctrl</kbd> + <kbd>C</kbd>；
 - 继续**上一次**的对话：运行 `codex resume --last`；
 - 从历史对话列表里**选一个**恢复：运行 `codex resume`，或在 Codex 里输入 `/resume`。
+
+:::::
 
 ## 权限设置
 
@@ -122,7 +141,7 @@ Codex 有一个专门看改动的命令，在输入框里输入：
 **不要**使用 Full Access 模式，也不要使用带 `dangerously` 字样的启动参数，除非你完全清楚后果。
 :::
 
-启动时也可以直接指定：
+启动时也可以直接指定沙箱模式：
 
 ```bash
 # 只读模式：让它看代码、回答问题，但不改任何东西
@@ -139,12 +158,13 @@ codex --sandbox read-only
 
 | 操作 | 作用 |
 |---|---|
-| `Esc` | **打断** Codex 当前的操作 |
-| `Esc` `Esc`（输入框为空时） | 回到之前的某条消息重新编辑 |
+| <kbd>Esc</kbd> | **打断** Codex 当前的操作 |
+| <kbd>Esc</kbd> <kbd>Esc</kbd>（输入框为空时） | 回到之前的某条消息重新编辑 |
 | `@` | 搜索并引用项目里的文件 |
+| `$` | 调用一个 Skill，例如 `$skill-creator`（第 6 章介绍） |
 | `!` 开头 | 直接执行终端命令，例如 `!git status` |
 | `/` 开头 | 使用斜杠命令 |
-| `Ctrl + C` | 退出（可能需要连按两次） |
+| <kbd>Ctrl</kbd> + <kbd>C</kbd> | 退出（可能需要连按两次） |
 
 ### 常用斜杠命令
 
@@ -183,16 +203,14 @@ Claude Code 支持用 `@文件路径` 的方式引用其他文件，这样两个
 
 VS Code 扩展商店里搜索 **Codex**（发布者是 OpenAI）可以安装图形界面版本。它和命令行版共用 `~/.codex/config.toml` 配置，第 5 章配置的 DeepSeek 同样适用。
 
-::: warning 待实测
-VS Code 插件搭配 DeepSeek 的使用流程，作者没有验证。
-:::
-
 ## 小结
 
 你现在应该会：
 - ✅ 在项目文件夹里启动 Codex，并信任文件夹
-- ✅ 理解 Codex 的沙箱机制，和 Claude Code 的区别
+- ✅ 理解 Codex 的沙箱机制，以及它和 Claude Code 的区别
 - ✅ 用 `/diff` 查看改动、用 `/permissions` 调整权限
 - ✅ 用 `AGENTS.md` 写项目规则
 
-Skill、实战项目和更多技巧：第 6～8 章（即将推出）
+接下来：
+- 让 Agent 更专业：[第 6 章 · Skill](../06-skills/)
+- 做一个完整的项目：[第 7 章 · 实战项目](../07-practice/)

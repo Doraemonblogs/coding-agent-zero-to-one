@@ -1,8 +1,10 @@
+---
+verified: 2026-09-29
+---
+
 # 常见问题 FAQ
 
-::: info 版本信息
-最后验证：2026-09-29
-:::
+<PageMeta />
 
 遇到问题时，先试试这三步，能解决大部分情况：
 
@@ -32,6 +34,26 @@
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 ```
+
+### 运行 claude 报错 native binary not installed
+
+**现象**：`npm install -g @anthropic-ai/claude-code` 显示安装成功，但运行 `claude` 时报错：
+
+```text
+Error: claude native binary not installed.
+```
+
+同时安装时可能出现 `npm warn install-scripts ... had install scripts blocked` 的提示。
+
+**原因**：npm 12 默认拦截所有软件包的安装脚本，而 Claude Code 需要一个安装脚本来放置对应系统的程序文件。
+
+**解决**：重新安装，并允许 Claude Code 运行安装脚本：
+
+```bash
+npm install -g @anthropic-ai/claude-code --allow-scripts=@anthropic-ai/claude-code
+```
+
+作者已用 npm 10、11、12 实测，这条命令都能正常安装。
 
 ### npm 安装很慢或失败
 
@@ -64,9 +86,11 @@ npm warn allow-scripts 1 package has install scripts not yet covered by allowScr
 npm warn allow-scripts   esbuild@0.21.5 (postinstall: node install.js)
 ```
 
-**原因**：这是 npm 12 新增的安全机制，默认**拦截**依赖包自带的安装脚本，防止恶意包在安装时执行代码。
+**原因**：这是 npm 新增的安全机制，防止恶意软件包在安装时偷偷执行代码。npm 11 的后期版本只是**提醒**（脚本照常运行），npm 12 会直接**拦截**（脚本不运行）。
 
-**解决**：通常**不需要处理**。以本教程的站点为例，被拦截的 esbuild 脚本只是做一次校验，拦截后站点照样能正常运行（作者已用 npm 12.1.0 实测）。如果确实需要放行某个包，按提示执行 `npm install-scripts approve <包名>`。
+**解决**：大多数情况**不需要处理**。以本教程的站点为例，被拦截的 esbuild 脚本只是做一次校验，拦截后站点照样能正常运行（作者已用 npm 12.1.0 实测）。
+
+**例外是 Claude Code**：它必须运行安装脚本，否则无法使用，见上面的 [native binary not installed](#运行-claude-报错-native-binary-not-installed)。其他软件包确实需要放行时，按提示在安装命令后加上 `--allow-scripts=<包名>` 即可。
 
 ### 浏览器打开 localhost 显示"拒绝连接"
 
@@ -93,7 +117,7 @@ npm warn allow-scripts   esbuild@0.21.5 (postinstall: node install.js)
 
 ### Claude Code 启动后还是要求登录
 
-按 [跳过官方登录](../05-deepseek/claude-code#第-2-步-跳过官方登录) 操作。如果已经做过，检查 `~/.claude/settings.json` 的 JSON 格式是否正确。
+按 [跳过官方登录](../05-deepseek/claude-code#跳过官方登录) 操作。如果已经做过，检查 `~/.claude/settings.json` 的 JSON 格式是否正确。
 
 ### 报错 401 / Authentication Fails
 
@@ -102,7 +126,7 @@ API Key 不对。常见原因：
 - 没有删掉占位符的尖括号 `< >`；
 - Key 已经在 DeepSeek 平台上被删除了。
 
-可以用 [验证 Key](../05-deepseek/#第-3-步-验证-key-可用) 的方法单独检查 Key。
+可以用 [验证 Key](../05-deepseek/#验证-key-可用) 的方法单独检查 Key。
 
 ### 报错 402 / Insufficient Balance
 
