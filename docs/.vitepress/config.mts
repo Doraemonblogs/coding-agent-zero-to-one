@@ -1,18 +1,43 @@
 import { defineConfig } from 'vitepress'
+import container from 'markdown-it-container'
 
 const repo = 'https://github.com/doraemonblogs/coding-agent-zero-to-one'
+const base = '/coding-agent-zero-to-one/'
 
 export default defineConfig({
   lang: 'zh-CN',
   title: 'Coding Agent 从零到一',
   description: '面向零基础用户的 Claude Code / Codex 中文入门教程：环境配置、安装、接入 DeepSeek、Skill 与使用技巧',
   // 部署到 GitHub Pages 时仓库名即子路径
-  base: '/coding-agent-zero-to-one/',
+  base,
   cleanUrls: true,
   lastUpdated: true,
 
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: `${base}logo.svg` }],
+    ['meta', { name: 'theme-color', content: '#0b7a70' }],
+  ],
+
   markdown: {
     lineNumbers: false,
+    config(md) {
+      // ::: steps —— 把其中的 ### 标题渲染成带编号的步骤时间线
+      md.use(container, 'steps', {
+        render: (tokens, idx) =>
+          tokens[idx].nesting === 1 ? '<div class="cz-steps">\n' : '</div>\n',
+      })
+      // ::: terminal 标题 —— 给代码块套一个终端窗口外框，用来展示"你会看到"的输出
+      md.use(container, 'terminal', {
+        render: (tokens, idx) => {
+          if (tokens[idx].nesting !== 1) return '</div>\n'
+          const title = tokens[idx].info.trim().replace(/^terminal\s*/, '') || '终端'
+          return (
+            '<div class="cz-terminal"><div class="cz-terminal-bar"><i></i><i></i><i></i>' +
+            `<span class="cz-terminal-title">${md.utils.escapeHtml(title)}</span></div>\n`
+          )
+        },
+      })
+    },
   },
 
   vite: {
@@ -24,8 +49,11 @@ export default defineConfig({
   },
 
   themeConfig: {
+    logo: '/logo.svg',
+
     nav: [
       { text: '开始学习', link: '/00-intro/' },
+      { text: '学习路线', link: '/00-intro/roadmap' },
       { text: '配置模板', link: '/configs' },
       { text: '常见问题', link: '/faq/' },
     ],
@@ -33,6 +61,7 @@ export default defineConfig({
     sidebar: [
       {
         text: '第 0 章 · 认识 Coding Agent',
+        collapsed: false,
         items: [
           { text: '什么是 Coding Agent', link: '/00-intro/' },
           { text: '学习路线图', link: '/00-intro/roadmap' },
@@ -40,7 +69,7 @@ export default defineConfig({
       },
       {
         text: '第 1 章 · 基础环境',
-        collapsed: false,
+        collapsed: true,
         items: [
           { text: '本章概览', link: '/01-environment/' },
           { text: '认识终端', link: '/01-environment/terminal' },
@@ -50,7 +79,8 @@ export default defineConfig({
         ],
       },
       {
-        text: '第 2 章 · 网络环境',
+        text: '第 2 章 · 网络环境（选读）',
+        collapsed: true,
         items: [
           { text: '什么时候需要代理', link: '/02-network/' },
           { text: '让终端走代理', link: '/02-network/terminal-proxy' },
@@ -58,6 +88,7 @@ export default defineConfig({
       },
       {
         text: '第 3 章 · Claude Code',
+        collapsed: true,
         items: [
           { text: '安装 Claude Code', link: '/03-claude-code/' },
           { text: '第一次上手', link: '/03-claude-code/basics' },
@@ -65,6 +96,7 @@ export default defineConfig({
       },
       {
         text: '第 4 章 · Codex CLI',
+        collapsed: true,
         items: [
           { text: '安装 Codex CLI', link: '/04-codex/' },
           { text: '第一次上手', link: '/04-codex/basics' },
@@ -72,6 +104,7 @@ export default defineConfig({
       },
       {
         text: '第 5 章 · 接入 DeepSeek',
+        collapsed: true,
         items: [
           { text: '准备 DeepSeek API Key', link: '/05-deepseek/' },
           { text: 'Claude Code 接入 DeepSeek', link: '/05-deepseek/claude-code' },
@@ -79,16 +112,37 @@ export default defineConfig({
         ],
       },
       {
-        text: '即将推出',
+        text: '第 6 章 · Skill',
         collapsed: true,
         items: [
-          { text: '第 6 章 · Skill', link: '/06-skills/' },
-          { text: '第 7 章 · 实战项目', link: '/07-practice/' },
-          { text: '第 8 章 · 方法与技巧', link: '/08-tips/' },
+          { text: 'Skill 是什么', link: '/06-skills/' },
+          { text: '安装现成的 Skill', link: '/06-skills/install' },
+          { text: '编写自己的 Skill', link: '/06-skills/create' },
+        ],
+      },
+      {
+        text: '第 7 章 · 实战项目',
+        collapsed: true,
+        items: [
+          { text: '项目介绍与准备', link: '/07-practice/' },
+          { text: '先规划，再动手', link: '/07-practice/plan' },
+          { text: '一步步实现', link: '/07-practice/build' },
+          { text: '调试与收尾', link: '/07-practice/finish' },
+        ],
+      },
+      {
+        text: '第 8 章 · 方法与技巧',
+        collapsed: true,
+        items: [
+          { text: '把需求说清楚', link: '/08-tips/' },
+          { text: '靠谱的工作流程', link: '/08-tips/workflow' },
+          { text: '上下文与费用', link: '/08-tips/context' },
+          { text: '安全须知', link: '/08-tips/safety' },
         ],
       },
       {
         text: '附录',
+        collapsed: false,
         items: [
           { text: '配置模板', link: '/configs' },
           { text: '常见问题 FAQ', link: '/faq/' },
