@@ -20,7 +20,7 @@ tested: partial
 |---|---|
 | [anthropics/skills](https://github.com/anthropics/skills) | Anthropic 官方的示例 Skill 仓库，质量有保障 |
 | [openai/skills](https://github.com/openai/skills) | OpenAI 官方为 Codex 整理的 Skill 仓库 |
-| 本教程的 [`skills/`](https://github.com/doraemonblogs/coding-agent-zero-to-one/tree/main/skills) 目录 | 本教程配套的中文示例 Skill，下一节会详细讲解 |
+| 本教程的 [`skills/`](https://github.com/doraemonblogs/coding-agent-zero-to-one/tree/HEAD/skills) 目录 | 本教程配套的中文示例 Skill，下一节会详细讲解 |
 | 社区分享 | GitHub 上搜索 `SKILL.md` 或 `agent skills`，能找到大量社区作品，质量参差不齐 |
 
 ### 推荐给新手的官方 Skill

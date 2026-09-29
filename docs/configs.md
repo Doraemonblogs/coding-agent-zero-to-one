@@ -9,7 +9,7 @@ versions: [Claude Code 2.1.284, Codex CLI 0.158.0]
 
 这里汇总了教程中用到的配置文件，方便直接复制。每个配置的详细解释和操作步骤，请看对应的教程页面。
 
-模板文件也存放在仓库的 [`configs/`](https://github.com/doraemonblogs/coding-agent-zero-to-one/tree/main/configs) 目录中。
+模板文件也存放在仓库的 [`configs/`](https://github.com/doraemonblogs/coding-agent-zero-to-one/tree/HEAD/configs) 目录中。
 
 ## Claude Code 接入 DeepSeek
 

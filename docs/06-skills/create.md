@@ -61,7 +61,7 @@ code ~/.agents/skills/zh-commit/SKILL.md
 
 <<< @/../skills/zh-commit/SKILL.md
 
-这个文件也可以在本教程仓库的 [`skills/zh-commit/`](https://github.com/doraemonblogs/coding-agent-zero-to-one/tree/main/skills/zh-commit) 目录里找到。
+这个文件也可以在本教程仓库的 [`skills/zh-commit/`](https://github.com/doraemonblogs/coding-agent-zero-to-one/tree/HEAD/skills/zh-commit) 目录里找到。
 
 ::: warning 开头的 --- 必须在第一行
 `---` 必须是文件的**第一行**，前面不能有空行或其他内容，否则工具读不到 `name` 和 `description`。Codex 在读不到 `description` 时会直接忽略这个 Skill。

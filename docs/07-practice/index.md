@@ -55,7 +55,7 @@ import { withBase } from 'vitepress'
 
 你实际看到的回复会不一样，这很正常：同样的需求，每次生成的计划和代码细节都可能不同。重要的是学会**提需求、审核、验收**的方法。
 
-这次运行的全部代码（**Agent 生成，作者没有改动**）和每一步的耗时、用量，都在教程仓库的 [`examples/xiaozhangben/`](https://github.com/doraemonblogs/coding-agent-zero-to-one/tree/main/examples/xiaozhangben) 里，做完后可以对照看看。
+这次运行的全部代码（**Agent 生成，作者没有改动**）和每一步的耗时、用量，都在教程仓库的 [`examples/xiaozhangben/`](https://github.com/doraemonblogs/coding-agent-zero-to-one/tree/HEAD/examples/xiaozhangben) 里，做完后可以对照看看。
 :::
 
 ## 准备项目

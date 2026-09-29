@@ -199,7 +199,7 @@ README 是项目的"说明书"，告诉别人（以及几个月后的你自己�
 数据存在哪里（提醒用户清除浏览器数据会导致记录丢失）。用简体中文。
 ```
 
-作者实测生成的 README 见 [examples/xiaozhangben/README.md](https://github.com/doraemonblogs/coding-agent-zero-to-one/blob/main/examples/xiaozhangben/README.md)。
+作者实测生成的 README 见 [examples/xiaozhangben/README.md](https://github.com/doraemonblogs/coding-agent-zero-to-one/blob/HEAD/examples/xiaozhangben/README.md)。
 
 最后提交：
 
@@ -250,7 +250,7 @@ b1ae9d5 新功能：占比图与月份切换（阶段 3）
 :::
 
 ::: info 作者这次实测一共花了多少
-从确认项目说明到最后一次提交，一共 15 步、99 轮对话，Agent 工作了约 17 分钟。按 DeepSeek 官方价格估算，总花费约 **2 元（空闲时段）/ 4 元（高峰时段）**。每一步的详细用量见 [RUN-LOG.md](https://github.com/doraemonblogs/coding-agent-zero-to-one/blob/main/examples/xiaozhangben/RUN-LOG.md)。
+从确认项目说明到最后一次提交，一共 15 步、99 轮对话，Agent 工作了约 17 分钟。按 DeepSeek 官方价格估算，总花费约 **2 元（空闲时段）/ 4 元（高峰时段）**。每一步的详细用量见 [RUN-LOG.md](https://github.com/doraemonblogs/coding-agent-zero-to-one/blob/HEAD/examples/xiaozhangben/RUN-LOG.md)。
 :::
 
 ## 回顾：你练到了什么

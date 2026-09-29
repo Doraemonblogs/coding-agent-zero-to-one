@@ -10,7 +10,7 @@ tested: partial
 <PageMeta />
 
 ::: info 验证情况
-- ✅ 已实测：作者用 Claude Code + DeepSeek 按本页步骤完整走了一遍，页面中标注"作者实测"的内容都来自这次运行（完整记录见 [RUN-LOG.md](https://github.com/doraemonblogs/coding-agent-zero-to-one/blob/main/examples/xiaozhangben/RUN-LOG.md)）
+- ✅ 已实测：作者用 Claude Code + DeepSeek 按本页步骤完整走了一遍，页面中标注"作者实测"的内容都来自这次运行（完整记录见 [RUN-LOG.md](https://github.com/doraemonblogs/coding-agent-zero-to-one/blob/HEAD/examples/xiaozhangben/RUN-LOG.md)）
 - ⚠️ 未实测：Codex 的 Plan 模式流程，Codex 的写法依据官方文档
 :::
 
@@ -161,7 +161,7 @@ style.css（样式）、app.js（逻辑），另外新建一个 PLAN.md 记录�
 - [ ] 自查：双击 index.html 能看到完整版面
 ```
 
-作者这次运行最终的 PLAN.md（所有项都已勾上，还有每个阶段的进度记录）在 [examples/xiaozhangben/PLAN.md](https://github.com/doraemonblogs/coding-agent-zero-to-one/blob/main/examples/xiaozhangben/PLAN.md)。
+作者这次运行最终的 PLAN.md（所有项都已勾上，还有每个阶段的进度记录）在 [examples/xiaozhangben/PLAN.md](https://github.com/doraemonblogs/coding-agent-zero-to-one/blob/HEAD/examples/xiaozhangben/PLAN.md)。
 
 ::: tip PLAN.md 的好处
 - 对话太长需要 `/clear` 重新开始时，让 Agent "先读一下 PLAN.md" 就能接着干；

@@ -2,13 +2,15 @@ import { defineConfig } from 'vitepress'
 import container from 'markdown-it-container'
 
 const repo = 'https://github.com/doraemonblogs/coding-agent-zero-to-one'
-const base = '/coding-agent-zero-to-one/'
+// 站点所在的子路径。部署时由 GitHub Actions 传入：绑定了自定义域名是 '/'，否则是 '/仓库名/'
+const base = process.env.DOCS_BASE || '/coding-agent-zero-to-one/'
+// "编辑此页"链接指向的分支，部署时传入仓库的默认分支
+const branch = process.env.DOCS_BRANCH || 'HEAD'
 
 export default defineConfig({
   lang: 'zh-CN',
   title: 'Coding Agent 从零到一',
   description: '面向零基础用户的 Claude Code / Codex 中文入门教程：环境配置、安装、接入 DeepSeek、Skill 与使用技巧',
-  // 部署到 GitHub Pages 时仓库名即子路径
   base,
   cleanUrls: true,
   lastUpdated: true,
@@ -153,7 +155,7 @@ export default defineConfig({
     socialLinks: [{ icon: 'github', link: repo }],
 
     editLink: {
-      pattern: `${repo}/edit/main/docs/:path`,
+      pattern: `${repo}/edit/${branch}/docs/:path`,
       text: '在 GitHub 上编辑此页',
     },
 

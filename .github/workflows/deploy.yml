@@ -1,0 +1,57 @@
+# 构建教程站点并发布到 GitHub Pages
+# 只在默认分支上部署；也可以在 Actions 页面手动运行
+name: Deploy site
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # "最后更新时间"需要完整的提交历史
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run docs:build
+        env:
+          # 绑定自定义域名后 base_path 为空，站点位于根路径
+          DOCS_BASE: ${{ steps.pages.outputs.base_path }}/
+          DOCS_BRANCH: ${{ github.event.repository.default_branch }}
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs/.vitepress/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

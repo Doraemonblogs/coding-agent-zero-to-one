@@ -121,7 +121,7 @@ DeepSeek 的模型更新很快。比如官方价格页注明：旧模型名 `dee
 ::: info 一个真实的例子
 作者用 Claude Code + deepseek-v4-pro 完整做了一遍 [第 7 章的实战项目](../07-practice/)：共 15 步、99 轮对话，Agent 工作了约 17 分钟。输入中有 **98.9%** 命中了缓存，按官方价格估算，总花费约 **2 元（空闲时段）/ 4 元（高峰时段）**。如果没有缓存，同样的用量要 25 元左右。
 
-每一步的详细用量见 [实测记录](https://github.com/doraemonblogs/coding-agent-zero-to-one/blob/main/examples/xiaozhangben/RUN-LOG.md)。
+每一步的详细用量见 [实测记录](https://github.com/doraemonblogs/coding-agent-zero-to-one/blob/HEAD/examples/xiaozhangben/RUN-LOG.md)。
 :::
 
 ::: tip 省钱的基本思路

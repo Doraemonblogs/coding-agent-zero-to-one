@@ -49,7 +49,7 @@ tested: full
 :::
 
 ::: info 下面以作者的实测为例
-作者用 Claude Code + DeepSeek 按本页做了一遍（完整记录见 [RUN-LOG.md](https://github.com/doraemonblogs/coding-agent-zero-to-one/blob/main/examples/xiaozhangben/RUN-LOG.md)）。**你的 PLAN.md 分阶段的方式可能和作者的不一样，以你自己的 PLAN.md 为准**——这正是让 Agent 先写计划的好处：每个阶段做什么，文件里都写着。
+作者用 Claude Code + DeepSeek 按本页做了一遍（完整记录见 [RUN-LOG.md](https://github.com/doraemonblogs/coding-agent-zero-to-one/blob/HEAD/examples/xiaozhangben/RUN-LOG.md)）。**你的 PLAN.md 分阶段的方式可能和作者的不一样，以你自己的 PLAN.md 为准**——这正是让 Agent 先写计划的好处：每个阶段做什么，文件里都写着。
 :::
 
 ::::: steps
