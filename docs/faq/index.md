@@ -136,6 +136,35 @@ DeepSeek 账户余额不足，去 [开放平台](https://platform.deepseek.com/)
 
 模型名写错了，或者 DeepSeek 更新了模型名。对照 [DeepSeek API 文档](https://api-docs.deepseek.com/zh-cn/) 修改配置里的模型名。
 
+### Codex 报错 401，网址是 api.openai.com
+
+**现象**：启动 Codex 或运行 `codex exec` 后，先反复出现 `Reconnecting... 1/5` 到 `5/5`，最后报错：
+
+```text
+ERROR: unexpected status 401 Unauthorized: Missing bearer or basic authentication in header,
+url: https://api.openai.com/v1/responses
+```
+
+**原因**：注意网址是 **OpenAI** 的，说明 DeepSeek 的配置根本没有生效，Codex 还在用默认的 OpenAI 服务（作者实测，没有配置就运行时就是这个现象）。
+
+**解决**：按 [Codex 接入 DeepSeek](../05-deepseek/codex) 检查：`config.toml` 的位置是否是 `~/.codex/config.toml`，`model_provider = "deepseek"` 是否写在文件开头。
+
+### Claude Code 输出里有一行 unrecognized_model
+
+**现象**：用 `claude -p` 时，回答前面多了一行：
+
+```text
+[claude-code:unrecognized_model] {"model":"deepseek-v4-pro[1m]","query_source":"sdk"}
+```
+
+**原因**：Claude Code 只内置了 Claude 系列模型的信息，看到别的模型名就提示一下。**不影响使用**，可以忽略。
+
+### Codex 提示 Model metadata ... not found
+
+**现象**：`warning: Model metadata for 'deepseek-v4-pro' not found. Defaulting to fallback metadata; this can degrade performance and cause issues.`
+
+**原因**：手动配置时，Codex 没有 DeepSeek 模型的"说明书"，只能用默认值。作者用手动配置完成了第 4 章的全部操作，没有遇到问题。想去掉这条提示，改用 DeepSeek 官方的 [一键脚本](../05-deepseek/codex#方式一-deepseek-官方一键脚本)，它会写入模型信息文件。
+
 ### Codex 报错 wire_api = "chat" is no longer supported
 
 你参考了旧教程。新版 Codex 只支持 `wire_api = "responses"`，按 [Codex 接入 DeepSeek](../05-deepseek/codex) 的写法修改。
@@ -161,6 +190,27 @@ git restore .
 所有还没存档的修改都会被撤销。Agent 新建的文件需要手动删除。
 
 Claude Code 还可以在输入框为空时连按两次 `Esc`，或输入 `/rewind`，把对话和代码一起回退到之前某一步。
+
+### Codex 报错 Cannot use the shared background server
+
+**现象**：启动 Codex 时报错：
+
+```text
+Error: Cannot use the shared background server: Experimental feature request failed.
+To work without the background server, rerun the same command with --no-daemon
+```
+
+**原因**：新版 Codex 会在后台运行一个共享服务，这个服务出了问题（作者遇到时，是后台残留了一个旧的服务进程）。
+
+**解决**：按提示加上 `--no-daemon` 启动：`codex --no-daemon`。或者重启电脑，让残留的进程退出。
+
+### Codex 提交时说 .git 是只读的
+
+这是 Codex 沙箱的保护：默认设置下，Codex 可以随意修改项目里的代码，但"存档"必须经过你同意。交互界面里批准它的请求即可；`codex exec` 模式下，自己运行它给出的 git 命令。详见 [Codex 第一次上手 · 存档](../04-codex/basics#存档)。
+
+### Agent 提交失败，说没有配置身份
+
+Git 还没有设置你的名字和邮箱。按 [安装 Git · 首次配置](../01-environment/git#首次配置) 设置好，再让它重新提交。
 
 ### 对话越来越慢、越来越贵
 

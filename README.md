@@ -7,7 +7,8 @@
 - **真正从零开始**：默认你没用过终端，每个概念第一次出现时都会解释。
 - **国内网络友好**：主线走「npm 国内镜像 + DeepSeek」，全程不需要代理。
 - **两个工具都讲**：Claude Code 和 Codex CLI 并列讲解，配置文件给出可直接复制的模板。
-- **标注验证状态**：每页标注最后验证的日期和工具版本，没能实测的步骤会明确标出「待实测」。
+- **真实跑通**：Claude Code、Codex 接入 DeepSeek 的每一步，作者都实际操作过；教程里的界面文字和 Agent 回复来自真实运行，第 7 章的实战项目由 Agent 实际做完（代码和用量记录见 [examples/xiaozhangben](examples/xiaozhangben/RUN-LOG.md)）。
+- **标注验证状态**：每页标注最后验证的日期和工具版本，没能实测的步骤（比如 Windows、macOS 真机截图）会明确标出「待实测」。
 - **完整实战**：从规划、分阶段实现到调试收尾，带你用 Agent 做完一个真正能用的小应用。
 
 ## 目录
@@ -38,7 +39,7 @@
 │   └── faq/
 ├── configs/         # 配置模板（Claude Code / Codex 接入 DeepSeek）
 ├── skills/          # 示例 Skill（两款工具通用）
-├── examples/        # 实战项目的参考成品
+├── examples/        # 实战项目：Agent 实际做出的「小账本」和实测记录
 └── package.json
 ```
 

@@ -3,7 +3,7 @@ banner: /images/banners/ch6.webp
 verified: 2026-09-29
 versions: [Claude Code 2.1.284, Codex CLI 0.158.0]
 time: 10 分钟
-tested: partial
+tested: full
 ---
 
 # 第 6 章 · Skill 是什么
@@ -108,7 +108,7 @@ Skill 遵循一个叫 **Agent Skills** 的开放格式，Claude Code 和 Codex �
 | 自带的 Skill | `/code-review`、`/debug`、`/run`、`/verify` 等 | `$skill-creator`、`$skill-installer` 等 |
 
 ::: tip 作者实测
-本教程提供的两个示例 Skill（`zh-commit` 和 `beginner-web`），作者已经分别放进两个工具的目录验证过：Claude Code 的 `/skills` 列表里能看到它们，Codex 也能正确读取到它们的名称和描述。
+本教程提供的两个示例 Skill（`zh-commit` 和 `beginner-web`），作者已经分别放进两个工具的目录验证过：两个工具都能列出它们，并且在接 DeepSeek 的真实对话中，说一句"帮我提交一下"就会**自动**用上 `zh-commit`。
 :::
 
 ::: details Claude Code 独有的 Skill 功能

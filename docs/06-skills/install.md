@@ -10,7 +10,7 @@ tested: partial
 <PageMeta />
 
 ::: info 验证情况
-- ✅ 已实测：把 Skill 文件夹复制到 `~/.claude/skills/` 和 `~/.agents/skills/` 后，两个工具都能识别
+- ✅ 已实测：把 Skill 文件夹复制到 `~/.claude/skills/` 和 `~/.agents/skills/` 后，两个工具都能识别，并能在对话中自动使用（接 DeepSeek）
 - ⚠️ 待实测：插件市场和 `$skill-installer` 的在线安装流程（依赖 GitHub 访问和模型调用）
 :::
 
@@ -146,6 +146,20 @@ cp -r skills/frontend-design ~/.agents/skills/
 :::
 
 列表里出现了刚装的 Skill 就成功了。`user` 表示它来自你的用户目录，`~60 tok` 是它的描述占用的 token 数。
+
+在 Codex 里输入 `/skills`，会先让你选择操作：
+
+::: terminal Codex 中你会看到（作者实测）
+```text
+  Skills
+  Choose an action
+
+› 1. List skills            Tip: press $ to open this list directly
+  2. Enable/Disable Skills  Enable or disable skills
+```
+:::
+
+选 `1` 查看已安装的 Skill 列表。就像提示说的，直接在输入框里按 `$` 也能打开这个列表。
 
 ::: tip 装了新 Skill，不想重启？
 Claude Code 里输入 `/reload-skills`，可以在不重启的情况下加载新增或修改过的 Skill。

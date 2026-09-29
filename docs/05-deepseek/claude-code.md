@@ -2,7 +2,7 @@
 verified: 2026-09-29
 versions: [Claude Code 2.1.284]
 time: 15 分钟
-tested: partial
+tested: full
 ---
 
 # Claude Code 接入 DeepSeek
@@ -10,8 +10,8 @@ tested: partial
 <PageMeta />
 
 ::: info 验证情况
-- ✅ 已实测：配置文件格式、跳过登录的命令、启动后界面显示 DeepSeek 模型名和 Manual 模式（Linux）
-- ⚠️ 待实测：真实调用 DeepSeek 完成任务（作者的测试环境暂时无法访问 DeepSeek）
+- ✅ 已实测（2026-09-29，Linux）：按本页配置后，`claude -p` 一问一答、交互界面、写文件、执行命令、Skill 自动触发、Git 提交全部正常；并用这套配置完整做完了 [第 7 章的实战项目](../07-practice/)
+- ⚠️ 未在 Windows、macOS 真机上逐步截图，但配置文件格式三个系统相同
 :::
 
 ## 原理
@@ -69,7 +69,7 @@ Windows 可以把 `code` 换成 `notepad`（记事本）；macOS 可以先执行
     "ANTHROPIC_MODEL": "deepseek-v4-pro[1m]",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek-v4-pro[1m]",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-v4-pro[1m]",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash[1m]",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-flash[1m]",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
     "CLAUDE_CODE_EFFORT_LEVEL": "max"
   },
@@ -143,10 +143,21 @@ cd ~/ai-playground
 claude -p "用一句话介绍你自己"
 ```
 
-几秒到几十秒后输出一段回答，就说明已经连上 DeepSeek 了。
+::: terminal 你会看到（作者实测，约 7 秒）
+```text
+[claude-code:unrecognized_model] {"model":"deepseek-v4-pro[1m]","query_source":"sdk"}
+我是 Claude Code，一个能直接在你的终端里读写代码、运行命令、调试问题、并帮你完成各类软件工程任务的 AI 编程助手。
+```
+:::
 
-::: tip 它说自己是 Claude？
-很正常。Claude Code 发给模型的系统提示词里写着"你是 Claude Code"，所以模型可能会这样自称。判断是否接入成功，要看下一步的界面显示和 DeepSeek 平台上的用量记录。
+输出一段回答，就说明已经连上 DeepSeek 了。
+
+::: tip 第一行的 unrecognized_model 是报错吗？
+不是。它的意思是"Claude Code 不认识 `deepseek-v4-pro` 这个模型名"——Claude Code 只内置了 Claude 系列模型的信息，看到别的名字就提示一下，**不影响使用**。这一行只在 `-p` 模式下出现，进入交互界面后不会显示。
+:::
+
+::: tip 它说自己是 Claude Code？
+很正常。Claude Code 发给模型的系统提示词里写着"你是 Claude Code"，所以模型会这样自称。判断是否接入成功，要看下一步的界面显示和 DeepSeek 平台上的用量记录。
 :::
 
 ### 进入交互界面确认
@@ -166,7 +177,7 @@ claude
 ────────────────────────────────────────────────────────────────
 ❯
 ────────────────────────────────────────────────────────────────
-  ⏸ manual mode on · ? for shortcuts
+  ⏸ manual mode on · ? for shortcuts · ← for agents
 ```
 :::
 
@@ -192,6 +203,7 @@ claude
 | 模型名后面的 `[1m]` | 告诉 Claude Code 这个模型支持 **100 万 token** 的上下文。Claude Code 会据此判断什么时候需要压缩对话 |
 | `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` | 关闭非必要的网络请求（如使用统计上报）。这些请求要发往 Anthropic 的服务器，在国内会连接失败，关掉可以避免报错和卡顿 |
 | `CLAUDE_CODE_EFFORT_LEVEL` | 模型思考的深度，`max` 为最深。DeepSeek 官方推荐 `max`；想更快、更省，可以改成 `high` |
+| Haiku 档用 `deepseek-flash` | Haiku 档负责的是给对话起标题、总结之类的轻量活，用更快更便宜的 flash 模型就够了。作者实测 `claude -p --model haiku "只回复 OK"` 能正常返回 |
 | `permissions.defaultMode` | 启动时的权限模式。`default` 即 **Manual（手动）模式**，每次修改文件、执行命令都会先问你。这是本教程额外加的，原因见 [权限模式](../03-claude-code/basics#权限模式) |
 
 ::: tip 这份配置和 DeepSeek 官方文档的关系
@@ -204,7 +216,7 @@ claude
 
 - **图片**：粘贴截图让它识别，可能不支持；
 - **联网搜索**：Claude Code 内置的网页搜索依赖 Anthropic 的服务，可能无法使用；
-- **Auto 权限模式**：依赖 Claude 模型做安全审核，接 DeepSeek 时能否正常工作未经验证，所以本教程默认用 Manual 模式；
+- **Auto 权限模式**：Auto 模式会用一个"审核模型"在每次操作前做安全检查。作者实测时 Claude Code 提示：通过 `api.deepseek.com` 使用时 Auto 模式**仍然可以工作**，但审核请求同样按 DeepSeek 计费，而且审核效果没有经过 Anthropic 针对 DeepSeek 的验证。所以本教程默认用 Manual 模式，熟悉之后再自己决定；
 - **插件市场**：官方插件市场托管在 GitHub 上，国内网络可能无法访问（第 6 章会介绍不依赖插件市场的 Skill 安装方法）；
 - **费用显示**：`/usage` 显示的费用可能按 Claude 的价格估算，以 DeepSeek 平台账单为准。
 

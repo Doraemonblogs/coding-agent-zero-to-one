@@ -2,7 +2,7 @@
 verified: 2026-09-29
 versions: [Claude Code 2.1.284, Codex CLI 0.158.0]
 time: 25 分钟
-tested: partial
+tested: full
 ---
 
 # 编写自己的 Skill
@@ -11,7 +11,7 @@ tested: partial
 
 ::: info 验证情况
 - ✅ 已实测：本页的两个示例 Skill 放入对应目录后，Claude Code 的 `/skills` 能列出它们，Codex 能读取到它们的名称和描述
-- ⚠️ 待实测：Agent 实际调用 Skill 的对话过程（需要模型调用，作者的测试环境暂时无法访问 DeepSeek）
+- ✅ 已实测（接 DeepSeek）：Claude Code 和 Codex 都能**自动触发**和**点名调用**这两个 Skill；`beginner-web` 的检查清单也会被按需读取。页面里的对话内容都来自实测
 :::
 
 ## 什么时候该写一个 Skill
@@ -89,7 +89,32 @@ code ~/.agents/skills/zh-commit/SKILL.md
 帮我提交一下
 ```
 
-因为"提交一下"出现在 `description` 里，Agent 应该会使用 `zh-commit`：先检查改动和密钥，再给出一条中文提交说明。
+因为"提交一下"出现在 `description` 里，Agent 会自动使用 `zh-commit`：
+
+::: terminal Claude Code 中你会看到（作者实测，节选）
+```text
+❯ 帮我提交一下
+
+● Skill(zh-commit)
+  ⎿  Successfully loaded skill
+
+  Thought for 9s, ran 2 shell commands
+
+● 改动看完了：是一个新的数字时钟网页（原生 HTML/CSS/JS，无密钥等敏感内容）。提交说明如下：
+
+  新功能：数字时钟页面显示时间和日期
+
+  - 新增 index.html 页面结构，上方大号时间、下方小字日期
+  ……
+
+● 提交完成 ✅
+  c04505e 新功能：数字时钟页面显示时间和日期
+```
+:::
+
+- `Skill(zh-commit)` 和 `Successfully loaded skill`：它翻开了这本"手册"；
+- "无密钥等敏感内容"：它按 Skill 里的第 2 步做了安全检查；
+- 提交说明的格式（`新功能：` 开头、下面列要点）也正是 Skill 里规定的。
 
 ### 测试：点名调用
 
@@ -102,6 +127,17 @@ code ~/.agents/skills/zh-commit/SKILL.md
 $zh-commit
 ```
 :::
+
+在 Claude Code 里输入 `/zh` 就会弹出候选，显示 Skill 的名字和 `description`；在 Codex 里输入 `$` 也会弹出 Skill 列表：
+
+::: terminal Codex 中你会看到（作者实测）
+```text
+› zh-commit  [Skill] 检查当前的代码改动，用简体中文写一条清晰的 Git 提交说明并提交。当用户说"提交一…
+  enter insert · esc close
+```
+:::
+
+按 <kbd>Enter</kbd> 把它插入输入框，再按 <kbd>Enter</kbd> 发送。Codex 回复"我来按中文提交规范检查改动并提交。"，然后依次执行了 `git status`、`git diff --stat`，最后请求批准提交（为什么要批准，见 [Codex 第一次上手 · 存档](../04-codex/basics#存档)）。
 
 :::::
 
@@ -124,7 +160,28 @@ beginner-web/
 对照 [reference/checklist.md](reference/checklist.md) 做一遍检查。
 ```
 
-平时 Agent 只读 `SKILL.md`；只有到了"完成一个功能前"这一步，才会去打开 `checklist.md`。
+平时 Agent 只读 `SKILL.md`；只有需要做检查时，才会去打开 `checklist.md`。作者实测，两个工具都是这样做的：
+
+::: code-group
+```text [Claude Code（作者实测）]
+● Skill(beginner-web)
+  ⎿  Successfully loaded skill
+
+  Thinking for 3s, reading 1 file…
+  ⎿  ~/.claude/skills/beginner-web/reference/checklist.md
+```
+
+```text [Codex（作者实测）]
+• Explored
+  └ Read SKILL.md (beginner-web skill)
+    List ls -la
+    Read checklist.md
+```
+:::
+
+::: tip Claude Code 读 Skill 的附带文件时可能会问你
+`checklist.md` 在用户目录里，不在当前项目文件夹内。Manual 模式下，Claude Code 读取项目**以外**的文件时会先问你（`Do you want to proceed?`），选第 2 项 `Yes, allow reading from ...beginner-web/reference during this session` 即可，这次会话里就不会再问了。
+:::
 
 ::: details 查看 beginner-web 的完整内容
 <<< @/../skills/beginner-web/SKILL.md

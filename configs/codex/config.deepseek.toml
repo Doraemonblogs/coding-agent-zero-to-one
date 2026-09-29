@@ -5,6 +5,8 @@
 model = "deepseek-v4-pro"
 model_provider = "deepseek"
 model_reasoning_effort = "high"
+# DeepSeek 不支持 Codex 内置的联网搜索，官方建议关闭
+web_search = "disabled"
 
 [model_providers.deepseek]
 name = "DeepSeek"

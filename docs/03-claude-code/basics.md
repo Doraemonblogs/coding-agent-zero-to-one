@@ -2,16 +2,20 @@
 verified: 2026-09-29
 versions: [Claude Code 2.1.284]
 time: 25 分钟
-tested: partial
+tested: full
 ---
+
+<script setup>
+import { withBase } from 'vitepress'
+</script>
 
 # Claude Code 第一次上手
 
 <PageMeta />
 
 ::: info 验证情况
-- ✅ 已实测：启动流程、信任文件夹界面、主界面显示、权限模式切换（Linux，接 DeepSeek 配置）
-- ⚠️ 待实测：与模型的真实对话过程（作者的测试环境暂时无法访问 DeepSeek），对话示例为示意
+- ✅ 已实测（2026-09-29，Linux，接 DeepSeek）：本页的整个流程作者都真实操作了一遍，页面里的界面文字、对话内容都来自这次实测，只删掉了部分空行
+- ⚠️ 未实测：VS Code 插件搭配 DeepSeek（见页面末尾）
 :::
 
 ## 开始之前
@@ -86,7 +90,7 @@ Claude Code'll be able to read, edit, and execute files here.
 ────────────────────────────────────────────────────────────────
 ❯ 在这里输入你的需求
 ────────────────────────────────────────────────────────────────
-  ⏸ manual mode on · ? for shortcuts
+  ⏸ manual mode on · ? for shortcuts · ← for agents
 ```
 :::
 
@@ -103,8 +107,7 @@ Claude Code'll be able to read, edit, and execute files here.
 在输入框里输入下面这段话，按 <kbd>Enter</kbd>：
 
 ```text
-帮我创建一个 index.html，打开后显示一个大号的数字时钟，每秒更新一次。
-时钟在页面正中间，背景用柔和的渐变色。
+帮我创建一个 index.html，打开后显示一个大号的数字时钟，每秒更新一次。时钟在页面正中间，背景用柔和的渐变色。
 ```
 
 ::: tip 想换行怎么办？
@@ -113,42 +116,70 @@ Claude Code'll be able to read, edit, and execute files here.
 
 ### 批准操作
 
-Claude 思考之后，会准备创建文件。在 **Manual（手动）模式**下，它每次要修改文件或执行命令时，都会停下来问你：
+Claude 思考之后，会准备创建文件。在 **Manual（手动）模式**下，它每次要修改文件或执行命令时，都会停下来问你。界面上方会列出它准备写入的内容，下方是选项：
 
-::: terminal 你会看到（示意，具体文字可能随版本不同）
+::: terminal 你会看到（作者实测）
 ```text
-● Write(index.html)
-
- Create file index.html
- ╭──────────────────────────────────────────╮
- │ <!DOCTYPE html>                          │
- │ <html lang="zh-CN">                      │
- │ ...                                      │
- ╰──────────────────────────────────────────╯
+  28 <body>
+  29   <div id="clock">--:--:--</div>
+  30   <script>
+  ……（省略中间的代码）……
+  43 </html>
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
  Do you want to create index.html?
  ❯ 1. Yes
-   2. Yes, allow all edits during this session (shift+tab)
-   3. No, and tell Claude what to do differently (esc)
+   2. Yes, and switch to accept edits (auto-approve file edits and
+      common file commands) for this session (shift+tab)
+   3. No
+
+ Esc to cancel · Tab to amend
 ```
 :::
 
 | 选项 | 含义 |
 |---|---|
 | **1. Yes** | 只批准这一次 |
-| **2. 允许本次会话的所有编辑** | 这次会话里再改文件就不问了（执行命令仍然会问） |
-| **3. No** | 拒绝，并告诉它应该怎么做 |
+| **2. Yes, and switch to accept edits** | 批准，并切换到"自动接受编辑"模式：这次会话里再改文件、执行常见的文件操作命令就不问了 |
+| **3. No** | 拒绝 |
+| <kbd>Esc</kbd> | 取消 |
+| <kbd>Tab</kbd> | 批准前补充几句要求（amend），比如"标题改成中文" |
 
-先选 `1`，看看它创建的文件内容对不对。熟悉之后再考虑选 `2`。
+先选 `1`，按 <kbd>Enter</kbd>。熟悉之后再考虑选 `2`。
+
+批准后，Claude 会写好文件并告诉你它做了什么：
+
+::: terminal 你会看到（作者实测，DeepSeek 用时 17 秒）
+```text
+● Write(index.html)
+  ⎿  Wrote 43 lines to index.html
+       1 <!DOCTYPE html>
+       2 <html lang="zh-CN">
+       ……
+     … +34 lines
+
+● 已创建 index.html，实现要点：
+
+  - 大号数字时钟：clamp(4rem, 14vw, 11rem) 让字号随屏幕自适应，最大约 176px
+  - 每秒更新：首次打开立即显示（tick()），之后 setInterval 每秒刷新
+  - 页面正中：flex 布局居中，占满整个视口
+  - 柔和渐变背景：淡蓝 → 淡紫 → 淡粉的 135° 线性渐变
+
+  直接用浏览器打开该文件即可看到效果。
+
+✻ Sautéed for 17s · done 10:27 AM
+```
+:::
+
+最后一行的 `Sautéed`（嫩煎）是 Claude Code 随机显示的趣味动词，每次都不一样（`Brewed`、`Cogitated`……），意思都是"干完了，用时多少"。
 
 ### 查看结果
 
-文件创建好之后，在浏览器里打开它。可以直接对 Claude 说：
+在文件管理器里双击 `index.html`，用浏览器打开。也可以直接对 Claude 说"帮我用浏览器打开 index.html"，它会执行打开命令（执行前同样会问你）。
 
-```text
-帮我用浏览器打开 index.html
-```
-
-它会执行打开命令（执行前同样会问你）。你也可以自己在文件管理器里双击 `index.html`。
+<figure class="cz-figure">
+  <img :src="withBase('/images/practice/clock-deepseek.png')" alt="Claude Code 接 DeepSeek 做出来的数字时钟网页：浅色渐变背景，正中间是大号的 18:30:17，下面一行小字 2026年9月29日 星期二" loading="lazy">
+  <figcaption>作者实测：Claude Code + DeepSeek 做出来的时钟（已加上下一步的日期）</figcaption>
+</figure>
 
 ### 继续提需求
 
@@ -160,15 +191,56 @@ Claude 思考之后，会准备创建文件。在 **Manual（手动）模式**�
 
 Claude 会记住之前的对话，在原来的基础上修改。**像和同事对话一样，一步一步提需求**，比一次写一大段要求效果更好。
 
+::: tip 它可能会"顺手"多做一些
+作者实测时，Claude 这一步不仅加了日期，还把一个文件拆成了 `index.html`、`style.css`、`app.js` 三个文件，并加上了中文注释——因为作者的电脑上装了一个要求"代码分文件、写中文注释"的 Skill（第 6 章会讲）。**如果它做了你没要求的事，要看一眼是不是你想要的**，不想要就直接说"不要拆分文件"。
+:::
+
+这一轮它写完代码后，还想执行一条命令检查语法。**执行命令**的询问长这样：
+
+::: terminal 你会看到（作者实测）
+```text
+ Bash command
+   node --check app.js
+   Check app.js for syntax errors
+
+ This command requires approval
+ Do you want to proceed?
+ ❯ 1. Yes
+   2. Yes, and don't ask again for: node *
+   3. Yes, and switch to auto mode · auto mode handles these prompts for you
+   4. No
+```
+:::
+
+- 第二行是**要执行的命令**，第三行是 Claude 对这条命令的**说明**，先看懂再批准；
+- 选项 2 的意思是"以后 `node` 开头的命令都不用问了"；
+- 选项 3 会切换到 Auto 模式，新手先不要选（原因见下文 [权限模式](#权限模式)）。
+
+`node --check` 只是检查代码有没有语法错误，不会改动任何东西，选 `1` 即可。
+
 ### 检查改动并存档
 
 改完之后，看看它具体改了什么。在 Claude Code 的输入框里，以 `!` 开头可以直接执行终端命令：
 
 ```text
-!git diff
+!git status
 ```
 
-也可以在 VS Code 的 [源代码管理面板](../01-environment/vscode#查看改动-源代码管理) 里查看，改动会用红绿颜色标出来。
+::: terminal 你会看到（作者实测，界面中的输出）
+```text
+?? app.js
+?? index.html
+?? style.css
+```
+:::
+
+`??` 表示这是 Git 还没管理过的**新文件**。
+
+::: tip 为什么 git diff 什么都没显示？
+作者一开始输入的是 `!git diff`，结果显示 `(Bash completed with no output)`，什么都没有。原因是：`git diff` **只显示已经存过档的文件的改动**，而这三个文件都是新文件。所以检查改动时，**先用 `git status` 看有哪些文件变了**，再用 `git diff` 看已有文件具体改了哪几行。
+
+在 VS Code 的 [源代码管理面板](../01-environment/vscode#查看改动-源代码管理) 里看更直观，新文件和改动都会列出来。
+:::
 
 满意的话就存档：
 
@@ -176,8 +248,49 @@ Claude 会记住之前的对话，在原来的基础上修改。**像和同事�
 !git add -A && git commit -m "完成数字时钟"
 ```
 
-::: tip 也可以让 Claude 帮你提交
-直接说"帮我把这些改动提交到 git，提交说明用中文"，它会自己执行 git 命令。
+### 让 Claude 帮你提交（可选）
+
+也可以直接对 Claude 说"帮我提交一下"，它会自己查看改动、写提交说明、执行 git 命令——执行前同样会问你：
+
+::: terminal 你会看到（作者实测，节选）
+```text
+● 改动看完了：是一个新的数字时钟网页（原生 HTML/CSS/JS，无密钥等敏感内容）。提交说明如下：
+
+  新功能：数字时钟页面显示时间和日期
+
+  - 新增 index.html 页面结构，上方大号时间、下方小字日期
+  - app.js 每秒刷新时间，日期显示为"2026 年 9 月 29 日 星期一"格式
+  - style.css 添加渐变背景和随屏幕自适应的字号样式
+
+ Bash command
+   │ git add -A && git commit -m "$(cat <<'EOF'
+   │ 新功能：数字时钟页面显示时间和日期
+   │ ……
+   │ Co-Authored-By: Claude Code <noreply@anthropic.com>
+   │ EOF
+   │ )"
+   Stage all changes and create commit
+```
+:::
+
+这段实测里有两个值得注意的地方：
+
+1. **提交说明写错了**：2026 年 9 月 29 日是**星期二**（页面上显示的也是星期二），但它在提交说明里写成了"星期一"。代码是对的，说明文字却是它"想当然"写的。**批准之前，把它写的内容读一遍**，发现不对就选 `No`，告诉它哪里要改。
+2. **末尾的 `Co-Authored-By` 一行**：Claude Code 默认会在提交说明末尾注明"由 Claude Code 协助完成"。不想要的话，可以在提交前告诉它"不要加 Co-Authored-By"。
+
+::: warning 提交失败，提示没有配置身份？
+作者在一台新电脑上第一次让 Claude 提交时，Git 报错：还没有设置用户名和邮箱。Claude 停下来问了作者：
+
+```text
+ ☐ Git 身份
+Git 还没有配置提交者身份，这次提交用什么名字和邮箱？
+❯ 1. 占位身份，先完成提交 (Recommended)
+  2. 跳过提交
+  3. Type something.
+  4. Chat about this
+```
+
+这时最好选 `2` 跳过，然后按 [安装 Git · 首次配置](../01-environment/git#首次配置) 设置好自己的名字和邮箱，再让它重新提交。
 :::
 
 ### 退出，以及下次继续
@@ -204,7 +317,7 @@ Claude 会记住之前的对话，在原来的基础上修改。**像和同事�
 工具下方以 `⎿` 开头的缩进行，是这个工具的**执行结果**，比如"读取了 42 行""命令输出了什么"。
 
 ::: tip 它问你问题时
-有时 Claude 会向你提问，并给出几个选项让你选。用 <kbd>↑</kbd> <kbd>↓</kbd> 选择，按 <kbd>Enter</kbd> 确认；都不合适的话，可以选择自己输入回答。认真回答这些问题，结果会好很多。
+有时 Claude 会向你提问，并给出几个选项让你选（就像上面"Git 身份"那个例子）。用 <kbd>↑</kbd> <kbd>↓</kbd> 选择，按 <kbd>Enter</kbd> 确认；都不合适的话，选 `Type something.` 自己输入回答，或选 `Chat about this` 先和它聊聊。认真回答这些问题，结果会好很多。
 :::
 
 ## 权限模式
@@ -219,7 +332,7 @@ Claude 会记住之前的对话，在原来的基础上修改。**像和同事�
 | Auto（自动） | `⏵⏵ auto mode on` | 几乎所有操作，由一个安全检查模型代替你审核 | 熟练之后的长任务 |
 
 ::: tip 新手建议：用 Manual 模式
-Claude Code 从 v2.1.283 开始，默认以 **Auto 模式**启动。Auto 模式依赖一个"安全审核模型"来判断操作是否危险，官方文档写明它只支持部分 Claude 模型；接入 DeepSeek 时能否正常工作，作者没有验证。
+Claude Code 从 v2.1.283 开始，默认以 **Auto 模式**启动，每次询问执行命令时也会提示"switch to auto mode"。Auto 模式依赖一个"安全审核模型"来判断操作是否危险：接 DeepSeek 时它仍然可以工作，但审核的效果没有经过 Anthropic 针对 DeepSeek 的验证（见 [已知限制](../05-deepseek/claude-code#已知限制)）。
 
 所以本教程在 [DeepSeek 配置模板](../05-deepseek/claude-code) 里把默认模式设为了 **Manual**。学习阶段，看着它的每一步操作，本身就是很好的学习过程。
 :::
@@ -329,7 +442,8 @@ VS Code 插件搭配 DeepSeek 的使用流程，作者没有在真实环境中�
 - ✅ 看懂 `Read`、`Write`、`Edit`、`Bash` 这些工具在做什么
 - ✅ 用 <kbd>Esc</kbd> 打断它，用 <kbd>Esc</kbd> <kbd>Esc</kbd> 回退
 - ✅ 用 <kbd>Shift</kbd> + <kbd>Tab</kbd> 切换权限模式
-- ✅ 用 `git diff` 检查改动，用 `CLAUDE.md` 写项目规则
+- ✅ 用 `git status` / `git diff` 检查改动，批准前读一遍它写的内容
+- ✅ 用 `CLAUDE.md` 写项目规则
 
 接下来：
 - 想同时学 Codex：[安装 Codex CLI](../04-codex/)

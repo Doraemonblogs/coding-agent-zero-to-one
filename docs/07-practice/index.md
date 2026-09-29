@@ -3,7 +3,7 @@ banner: /images/banners/ch7.webp
 verified: 2026-09-29
 versions: [Claude Code 2.1.284, Codex CLI 0.158.0]
 time: 15 分钟
-tested: partial
+tested: full
 ---
 
 <script setup>
@@ -22,7 +22,7 @@ import { withBase } from 'vitepress'
 
 <figure class="cz-figure" style="max-width:340px;margin-left:auto;margin-right:auto">
   <img :src="withBase('/images/practice/xiaozhangben-mobile.png')" alt="小账本在手机上的效果：顶部是本月收入、支出、结余，中间是记账表单和支出分类占比，下方是按日期分组的明细" loading="lazy">
-  <figcaption>参考成品在手机上的效果</figcaption>
+  <figcaption>作者实测：Claude Code + DeepSeek 按本章步骤做出的小账本（手机上的效果）</figcaption>
 </figure>
 
 功能清单：
@@ -50,10 +50,12 @@ import { withBase } from 'vitepress'
 | 分步实现 | 一次一个功能、检查改动、用 Skill 提交 | [一步步实现](./build) |
 | 调试与收尾 | 描述 bug、看浏览器报错、代码审查、写 README | [调试与收尾](./finish) |
 
-::: info 关于本章的对话示例
-本章给出的**你要输入的内容**可以直接照着用；Agent 的回复是示意，你实际看到的会不一样，这很正常：同样的需求，每次生成的代码细节都可能不同。重要的是学会**提需求、审核、验收**的方法。
+::: info 本章是真实跑出来的
+作者用 **Claude Code + DeepSeek（deepseek-v4-pro）** 按本章的步骤，把小账本从头到尾做了一遍：15 步、约 17 分钟、花费 2～4 元。本章里标注"作者实测"的 Agent 回复都来自这次运行，上面的截图也是这次做出来的成品。
 
-本教程仓库的 [`examples/xiaozhangben/`](https://github.com/doraemonblogs/coding-agent-zero-to-one/tree/main/examples/xiaozhangben) 里有一份参考成品（作者编写并用浏览器自动化测试验证过），做完后可以对照看看。
+你实际看到的回复会不一样，这很正常：同样的需求，每次生成的计划和代码细节都可能不同。重要的是学会**提需求、审核、验收**的方法。
+
+这次运行的全部代码（**Agent 生成，作者没有改动**）和每一步的耗时、用量，都在教程仓库的 [`examples/xiaozhangben/`](https://github.com/doraemonblogs/coding-agent-zero-to-one/tree/main/examples/xiaozhangben) 里，做完后可以对照看看。
 :::
 
 ## 准备项目
@@ -144,7 +146,16 @@ xiaozhangben/
 你看到这个项目的说明和 Skill 了吗？用两三句话告诉我这个项目要做什么、有哪些规范。
 ```
 
-如果它能说出"小账本""原生 HTML/CSS/JavaScript""中文注释"之类的内容，说明项目说明和 Skill 都生效了。
+::: terminal 你会看到（作者实测）
+```text
+看到了。这个项目叫「小账本」，是一个在浏览器里运行的个人记账网页，给你自己日常记账用的。
+规范有：始终用简体中文回复；你是编程新手，所以每完成一步都要告诉你怎么看效果；
+遵守 beginner-web Skill（只用原生 HTML/CSS/JavaScript、写中文注释、手机和电脑都能看）；
+需求和进度记录在 PLAN.md 里，每完成一个阶段就更新它。
+```
+:::
+
+它能说出"小账本""原生 HTML/CSS/JavaScript""中文注释"这些内容，说明项目说明和 Skill 都生效了。
 
 :::::
 

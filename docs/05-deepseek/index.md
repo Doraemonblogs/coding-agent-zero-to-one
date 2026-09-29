@@ -1,9 +1,9 @@
 ---
 banner: /images/banners/ch5.webp
 verified: 2026-09-29
-versions: [deepseek-v4-pro, deepseek-v4-flash]
+versions: [deepseek-v4-pro, deepseek-flash]
 time: 10 分钟
-tested: none
+tested: partial
 ---
 
 # 第 5 章 · 准备 DeepSeek API Key
@@ -64,7 +64,13 @@ curl https://api.deepseek.com/models -H "Authorization: Bearer <你的 API Key>"
 ```
 :::
 
-- 返回一段包含 `"id": "deepseek-..."` 的内容：Key 可用；
+::: terminal 你会看到（作者实测，2026-09-29）
+```text
+{"object":"list","data":[{"id":"deepseek-flash","object":"model","owned_by":"deepseek"},{"id":"deepseek-v4-pro","object":"model","owned_by":"deepseek"}]}
+```
+:::
+
+- 返回类似上面这样包含 `"id": "deepseek-..."` 的内容：Key 可用；
 - 返回 `401` 或 `Authentication Fails`：Key 错了，检查是否复制完整、有没有多余的空格。
 
 :::::
@@ -78,36 +84,51 @@ curl https://api.deepseek.com/models -H "Authorization: Bearer <你的 API Key>"
 :::
 
 ::: warning 待实测
-注册、实名认证、充值的具体流程作者没有逐步截图验证，以平台实际页面为准。
+注册、实名认证、充值的具体流程作者没有逐步截图验证，以平台实际页面为准。创建 Key 之后的步骤（验证 Key、接入两款工具）作者都已实测。
 :::
 
 ## 了解模型
 
-截至本文验证时，DeepSeek 官方给 Agent 场景推荐的模型是：
+截至本文验证时（2026-09），DeepSeek 开放平台提供两个模型：
 
-| 模型名 | 特点 | 适合 |
-|---|---|---|
-| `deepseek-v4-pro` | 能力更强，支持 100 万 token 上下文 | 主力模型，大部分编程任务 |
-| `deepseek-v4-flash` / `deepseek-flash` | 更快、更便宜 | 简单任务、辅助任务 |
+| 模型名 | 实际版本 | 特点 | 适合 |
+|---|---|---|---|
+| `deepseek-v4-pro` | DeepSeek-V4-Pro | 能力更强，**不支持**图片输入 | 主力模型，大部分编程任务 |
+| `deepseek-flash` | DeepSeek-V4.1-Flash | 更快、便宜很多，**支持**图片输入 | 简单任务、辅助任务、需要看图时 |
+
+两个模型都支持 100 万 token 的上下文。
 
 ::: warning 模型名会更新
-DeepSeek 的模型更新很快，模型名也会随之变化（例如较早的 `deepseek-chat`、`deepseek-reasoner` 已被官方标注为即将废弃）。配置时如果报"模型不存在"，请到 [DeepSeek API 文档](https://api-docs.deepseek.com/zh-cn/) 查看最新的模型名。
+DeepSeek 的模型更新很快。比如官方价格页注明：旧模型名 `deepseek-v4-flash` 仍可调用，但对应模型已下线，请求会交给 V4.1-Flash 处理，**新配置请使用 `deepseek-flash`**；更早的 `deepseek-chat`、`deepseek-reasoner` 也已被标注为即将废弃。
 
-上面验证 Key 时返回的列表里，也能看到你的账号当前可用的模型名。
+配置时如果报"模型不存在"，用上面验证 Key 的命令查看你的账号当前可用的模型名，或者到 [DeepSeek API 文档](https://api-docs.deepseek.com/zh-cn/) 查看。
 :::
 
 ## 关于费用
 
-- 费用按 **token** 计算（可以粗略理解为"字数"），输入和输出分开计价；
-- Agent 每一轮都会把项目文件、对话历史发给模型，**一次任务消耗的 token 往往比网页聊天多得多**；
-- DeepSeek 对**重复出现的输入内容**（缓存命中）收费更低。Agent 的对话里大量内容是重复的，所以实际费用通常比按字数估算的要少；
-- 具体价格以 [DeepSeek 官方价格页](https://api-docs.deepseek.com/zh-cn/quick_start/pricing) 为准；
-- 在开放平台的「用量信息」页面可以查看每天的消耗。
+费用按 **token** 计算（可以粗略理解为"字数"），分三部分计价。下面是官方价格（2026-09，单位：元 / 百万 token）：
+
+| | deepseek-v4-pro | deepseek-flash |
+|---|---|---|
+| 输入（命中缓存） | 0.15 ～ 0.30 | 0.02 ～ 0.04 |
+| 输入（未命中缓存） | 4.5 ～ 9.0 | 1 ～ 2 |
+| 输出 | 13.5 ～ 27.0 | 4 ～ 8 |
+
+- 每格的两个数分别是**空闲时段**和**高峰时段**的价格。高峰时段是北京时间工作日 9:00-12:00、14:00-18:00，其余时间（含周末和法定节假日）都是空闲时段，**半价**；
+- **命中缓存**的输入非常便宜。Agent 每一轮都会重复发送大量相同的内容（系统提示词、项目说明、之前的对话），这些重复部分大多能命中缓存；
+- 具体价格以 [DeepSeek 官方价格页](https://api-docs.deepseek.com/zh-cn/quick_start/pricing) 为准，在开放平台的「用量信息」页面可以查看每天的消耗。
+
+::: info 一个真实的例子
+作者用 Claude Code + deepseek-v4-pro 完整做了一遍 [第 7 章的实战项目](../07-practice/)：共 15 步、99 轮对话，Agent 工作了约 17 分钟。输入中有 **98.9%** 命中了缓存，按官方价格估算，总花费约 **2 元（空闲时段）/ 4 元（高峰时段）**。如果没有缓存，同样的用量要 25 元左右。
+
+每一步的详细用量见 [实测记录](https://github.com/doraemonblogs/coding-agent-zero-to-one/blob/main/examples/xiaozhangben/RUN-LOG.md)。
+:::
 
 ::: tip 省钱的基本思路
 - 一个话题做完就开新对话（Claude Code 用 `/clear`，Codex 用 `/new`），不要让对话无限变长；
 - 需求说清楚，减少来回返工；
-- 简单任务可以切换到更便宜的 flash 模型。
+- 简单任务可以切换到更便宜的 flash 模型；
+- 不赶时间的大任务，放到空闲时段（晚上、周末）做，价格减半。
 
 更多技巧见 [第 8 章 · 上下文与费用](../08-tips/context)。
 :::
