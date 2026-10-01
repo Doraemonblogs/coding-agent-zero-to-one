@@ -2,6 +2,8 @@
 
 面向零基础用户的 **Claude Code / Codex** 中文入门教程：从安装基础环境开始，一步步做到接入 DeepSeek，并在自己的电脑上用 AI 写代码。
 
+**在线阅读：<https://codeagent.duckdns.org>**
+
 ## 特点
 
 - **真正从零开始**：默认你没用过终端，每个概念第一次出现时都会解释。
@@ -59,6 +61,10 @@ npm run docs:dev
 ```bash
 npm run docs:build
 ```
+
+## 部署
+
+推送到默认分支后，GitHub Actions（`.github/workflows/deploy.yml`）会自动构建并发布到 GitHub Pages，绑定的域名是 `codeagent.duckdns.org`。也可以在仓库的 Actions 页面手动运行 **Deploy site**。
 
 ## 参与贡献
 
